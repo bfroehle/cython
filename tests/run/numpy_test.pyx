@@ -330,7 +330,7 @@ def test_f_contig(np.ndarray[int, ndim=2, mode='fortran'] arr):
         print u" ".join([unicode(arr[i, j]) for j in range(arr.shape[1])])
 
 # Exhaustive dtype tests -- increments element [1] by 1 (or 1+1j) for all dtypes
-def inc1_byte(np.ndarray[char] arr):                    arr[1] += 1
+def inc1_byte(np.ndarray[signed char] arr):             arr[1] += 1
 def inc1_ubyte(np.ndarray[unsigned char] arr):          arr[1] += 1
 def inc1_short(np.ndarray[short] arr):                  arr[1] += 1
 def inc1_ushort(np.ndarray[unsigned short] arr):        arr[1] += 1
@@ -451,23 +451,23 @@ def test_bad_cast():
     cdef np.ndarray[int, cast=True] arr = np.array([1], dtype='b')
 
 cdef packed struct PackedStruct:
-    char a
+    signed char a
     int b
 
 cdef struct UnpackedStruct:
-    char a
+    signed char a
     int b
 
 cdef struct PartiallyPackedStruct:
-    char a
+    signed char a
     int b
     PackedStruct sub
     int c
 
 cdef packed struct PartiallyPackedStruct2:
-    char a
+    signed char a
     int b
-    char c
+    signed char c
     UnpackedStruct sub
 
 def test_packed_align(np.ndarray[PackedStruct] arr):
