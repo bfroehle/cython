@@ -249,6 +249,12 @@
   #define __Pyx_DOCSTR(n)  (n)
 #endif
 
+#ifdef Py_LIMITED_API
+#define PyTuple_GET_ITEM(p,n) PyTuple_GetItem((p),(n))
+#define PyTuple_SET_ITEM(p,n,o) PyTuple_SetItem((p),(n),(o))
+#define PyTuple_GET_SIZE(p) PyTuple_Size((p))
+#endif
+
 /////////////// UtilityFunctionPredeclarations.proto ///////////////
 
 /* inline attribute */
@@ -295,6 +301,7 @@ PyEval_InitThreads();
 
 /////////////// CodeObjectCache.proto ///////////////
 
+#ifndef Py_LIMITED_API
 typedef struct {
     int code_line;
     PyCodeObject* code_object;
@@ -311,11 +318,13 @@ static struct __Pyx_CodeObjectCache __pyx_code_cache = {0,0,NULL};
 static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line);
 static PyCodeObject *__pyx_find_code_object(int code_line);
 static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object);
+#endif
 
 /////////////// CodeObjectCache ///////////////
 // Note that errors are simply ignored in the code below.
 // This is just a cache, if a lookup or insertion fails - so what?
 
+#ifndef Py_LIMITED_API
 static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;
     if (end >= 0 && code_line > entries[end].code_line) {
@@ -396,9 +405,11 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object) {
     __pyx_code_cache.count++;
     Py_INCREF(code_object);
 }
+#endif
 
 /////////////// CodeObjectCache.cleanup ///////////////
 
+#ifndef Py_LIMITED_API
   if (__pyx_code_cache.entries) {
       __Pyx_CodeObjectCacheEntry* entries = __pyx_code_cache.entries;
       int i, count = __pyx_code_cache.count;
@@ -410,6 +421,7 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object) {
       }
       PyMem_Free(entries);
   }
+#endif
 
 /////////////// CheckBinaryVersion.proto ///////////////
 

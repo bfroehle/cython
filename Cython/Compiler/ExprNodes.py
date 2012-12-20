@@ -6664,6 +6664,7 @@ class CodeObjectNode(ExprNode):
         file_path = StringEncoding.BytesLiteral(func.pos[0].get_filenametable_entry().encode('utf8'))
         file_path_const = code.get_py_string_const(file_path, identifier=False, is_str=True)
 
+        code.putln('#ifndef Py_LIMITED_API')
         code.putln("%s = (PyObject*)__Pyx_PyCode_New(%d, %d, %d, 0, 0, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s); %s" % (
             self.result_code,
             len(func.args),            # argcount
@@ -6681,6 +6682,7 @@ class CodeObjectNode(ExprNode):
             Naming.empty_bytes,        # lnotab
             code.error_goto_if_null(self.result_code, self.pos),
             ))
+        code.putln('#endif')
 
 
 class DefaultLiteralArgNode(ExprNode):

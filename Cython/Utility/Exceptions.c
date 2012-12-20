@@ -419,13 +419,18 @@ static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
 
 /////////////// AddTraceback.proto ///////////////
 
+#ifndef Py_LIMITED_API
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename); /*proto*/
+#else
+#define __Pyx_AddTraceback(n,c,p,f)  ((void) 0)
+#endif
 
 /////////////// AddTraceback ///////////////
 //@requires: ModuleSetupCode.c::CodeObjectCache
 //@substitute: naming
 
+#ifndef Py_LIMITED_API
 #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
@@ -512,3 +517,4 @@ bad:
     Py_XDECREF(py_code);
     Py_XDECREF(py_frame);
 }
+#endif

@@ -8,7 +8,11 @@
 #define __Pyx_Owned_Py_None(b) (Py_INCREF(Py_None), Py_None)
 #define __Pyx_PyBool_FromLong(b) ((b) ? (Py_INCREF(Py_True), Py_True) : (Py_INCREF(Py_False), Py_False))
 static CYTHON_INLINE int __Pyx_PyObject_IsTrue(PyObject*);
+#ifndef Py_LIMITED_API
 static CYTHON_INLINE PyObject* __Pyx_PyNumber_Int(PyObject* x);
+#else
+#define __Pyx_PyNumber_Int(x) PyNumber_Long(x)
+#endif
 
 static CYTHON_INLINE Py_ssize_t __Pyx_PyIndex_AsSsize_t(PyObject*);
 static CYTHON_INLINE PyObject * __Pyx_PyInt_FromSize_t(size_t);
@@ -32,6 +36,7 @@ static CYTHON_INLINE int __Pyx_PyObject_IsTrue(PyObject* x) {
    else return PyObject_IsTrue(x);
 }
 
+#ifndef Py_LIMITED_API
 static CYTHON_INLINE PyObject* __Pyx_PyNumber_Int(PyObject* x) {
   PyNumberMethods *m;
   const char *name = NULL;
@@ -77,6 +82,7 @@ static CYTHON_INLINE PyObject* __Pyx_PyNumber_Int(PyObject* x) {
   }
   return res;
 }
+#endif
 
 static CYTHON_INLINE Py_ssize_t __Pyx_PyIndex_AsSsize_t(PyObject* b) {
   Py_ssize_t ival;
